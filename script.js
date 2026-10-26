@@ -27,6 +27,15 @@ import { createShape } from "./shape.js";
 // Settings variables should contain all of the "fixed" parts of your programs
 // For example: which notes you can play, how fast things move, the tempo.
 const note = "C4"; // the note played when the pointer goes down
+const melody1 = ["C4", "E4", "G4"];
+const numberofPoints = 8;
+/*const points = ["1", "2", "3", "4", "5", "6", "7", "8"];
+
+let previousPoint = null;
+let currentPoint = 1;
+let diff = currentPoint - previousPoint;
+let direction = (diff + points.length) % points.length;
+let octave = 4;*/
 
 // ---------- State ----------
 // State variables are the parts of your program that change over time.
@@ -56,6 +65,47 @@ function pointerDown(event) {
   console.log("Pointer down at", event.clientX, event.clientY);
   synth.triggerAttackRelease(note, "8n"); // play the note for an eighth note
 }
+function startSound(event) {
+  Tone.start(); // sound is allowed after a click
+}
+
+function pointerEnter(event) {
+  synth.triggerAttackRelease("C4", "8n");
+  shape.setColour(100, 80, 0.5);
+}
+
+function pointerLeave(event) {
+  synth.triggerAttackRelease("G3", "8n");
+  shape.setColour(200, 80, 0.3);
+}
+
+function fullRotation() {
+  if (direction === 1) {
+    direction = 1;
+  } else if (direction === points.length - 1) {
+    direction = -1;
+  } else {
+    direction = 0;
+  }
+  return direction;
+
+  //diff % length(setup)
+}
+
+/*function pointerMove(event) {
+  let centerX = window.innerWidth / 2;
+  let centerY = window.innerHeight / 2;
+  let angle = Math.atan2(event.clientY - centerY, event.clientX - centerX);
+}*/
+//let point = Math.floor(
+//((angle + 2 * Math.PI) % (2 * Math.PI)) / ((2 * Math.PI) / 8),
+//);
+function playmelody1() {
+  let now = Tone.now();
+  for (let i = 0; i < melody1.length; i++) {
+    synth.triggerAttackRelease(melody1[i], "8n", now + i * 0.4);
+  }
+}
 
 // ---------- Setup ----------
 // Setup is run once, at the start of the program. It sets everything up for us!
@@ -64,11 +114,13 @@ function setup() {
   use(); // start the use loop
 
   // Example: a shape near the middle of the window. Replace it with your own.
-  const example = createShape("example");
-  example.setPosition(0.5, 0.5);
+  const shape = createShape("shape");
+  shape.setPosition(0.5, 0.5);
 
   // Put your event listener code here
-  window.addEventListener("pointerdown", pointerDown);
+  window.addEventListener("pointerdown", startSound);
+  shape.element.addEventListener("pointerenter", pointerEnter);
+  shape.element.addEventListener("pointerleave", pointerLeave);
 }
 
 setup(); // Always remember to call setup()!
