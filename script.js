@@ -29,13 +29,14 @@ import { createShape } from "./shape.js";
 const note = "C4"; // the note played when the pointer goes down
 const melody1 = ["C4", "E4", "G4"];
 const numberofPoints = 8;
-/*const points = ["1", "2", "3", "4", "5", "6", "7", "8"];
+const points = ["1", "2", "3", "4", "5", "6", "7", "8"];
 
 let previousPoint = null;
 let currentPoint = 1;
-let diff = currentPoint - previousPoint;
-let direction = (diff + points.length) % points.length;
-let octave = 4;*/
+let steps = 0; // counting the steps
+//let diff = currentPoint - previousPoint;
+let direction = 0; // zero means no direction detected yet
+let octave = 3;
 
 // ---------- State ----------
 // State variables are the parts of your program that change over time.
@@ -63,20 +64,21 @@ function pointerDown(event) {
   Tone.start(); // browsers only allow sound after the player has pressed something
 
   console.log("Pointer down at", event.clientX, event.clientY);
-  synth.triggerAttackRelease(note, "8n"); // play the note for an eighth note
+  console.log("C" + octave);
+  synth.triggerAttackRelease("C" + octave, "8n"); // play the note for an eighth note
 }
 function startSound(event) {
   Tone.start(); // sound is allowed after a click
 }
 
 function pointerEnter(event) {
-  synth.triggerAttackRelease("C4", "8n");
-  shape.setColour(100, 80, 0.5);
+  synth.triggerAttackRelease("C" + octave, "8n");
+  //shape.setColour(100, 80, 0.5); (error message)
 }
 
 function pointerLeave(event) {
-  synth.triggerAttackRelease("G3", "8n");
-  shape.setColour(200, 80, 0.3);
+  synth.triggerAttackRelease("G" + octave, "8n");
+  // shape.setColour(200, 80, 0.3); (error message)
 }
 
 function fullRotation() {
@@ -92,13 +94,57 @@ function fullRotation() {
   //diff % length(setup)
 }
 
-/*function pointerMove(event) {
-  let centerX = window.innerWidth / 2;
-  let centerY = window.innerHeight / 2;
-  let angle = Math.atan2(event.clientY - centerY, event.clientX - centerX);
-}*/
-//let point = Math.floor(
-//((angle + 2 * Math.PI) % (2 * Math.PI)) / ((2 * Math.PI) / 8),
+function pointerMove(event) {
+  const centerX = window.innerWidth / 2 + 50; //+50 cause the circle is not in the center, the position start at the left corner and +50 brings it to the center
+  const centerY = window.innerHeight / 2 + 50;
+  const distanceX = event.clientX - centerX;
+  const distanceY = event.clientY - centerY;
+  const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
+
+  const angle = Math.atan2(event.clientY - centerY, event.clientX - centerX);
+
+  const point =
+    Math.floor(
+      ((angle + 2 * Math.PI) % (2 * Math.PI)) /
+        ((2 * Math.PI) / numberofPoints),
+    ) + 1;
+  if (distance < 50 || distance > 150) {
+    return;
+  }
+  if (point !== previousPoint) {
+    if (previousPoint !== null) {
+      const difference = point - previousPoint;
+      let newDirection = 0;
+
+      if (difference === 1 || (previousPoint === 8 && point === 1)) {
+        newDirection = 1;
+      } else if (difference === -1 || (previousPoint === 1 && point === 8)) {
+        //knows when you do a step back or forward
+        newDirection = -1;
+      }
+      if (newDirection === 0) {
+        steps = 0;
+      } else {
+        if (newDirection !== direction) {
+          steps = 1;
+        } else {
+          steps++; //adds 1 step
+        }
+        direction = newDirection;
+        if (steps === 8) {
+          octave += direction;
+          steps = 0;
+          console.log(octave);
+        }
+      }
+    }
+
+    previousPoint = point;
+  }
+}
+//console.log(angle, point);
+// console.log(distance);
+
 //);
 function playmelody1() {
   let now = Tone.now();
@@ -119,6 +165,7 @@ function setup() {
 
   // Put your event listener code here
   window.addEventListener("pointerdown", startSound);
+  window.addEventListener("pointermove", pointerMove);
   shape.element.addEventListener("pointerenter", pointerEnter);
   shape.element.addEventListener("pointerleave", pointerLeave);
 }
