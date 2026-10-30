@@ -1,21 +1,37 @@
 # My instrument
 
-**Play it here:** <!-- Paste your GitHub Pages link here, e.g. https://idbcourses.github.io/your-repo-name/ -->
+**Play it here:** <!-- Paste your GitHub Pages link here, e.g. https://idbcourses.github.io/your-repo-name/ --> https://github.com/IDBCourses/ht26-a3-lynea33pendl-lab.git
 
 **Name:** Lynea AP1922
 
 <!-- One or two sentences: what kind of instrument is it, and what is it like to play? -->
 
-## How to play
+it is a polyynth that plays different Notes and a melody by moving the pointer in different directions or when pressing it down.It adds a freeverb effect and changes the octaves.
+
+## How to play (still working on it)
 
 <!-- Fill in the table with a row for everything the player can do with the pointer: clicking, moving slowly or fast, moving in circles, holding still... Say what happens to the sound and to the shapes. If you added keys, give them rows too. -->
 
-| When you...  | The sound...                         | The shapes... |
-| ------------ | ------------------------------------ | ------------- |
-| Click or tap | Plays a C4 (the example: replace it) | Nothing yet   |
-|              |                                      |               |
+| When you...                                      | The sound...                                                      | The shapes...                                                                      |
+| ------------------------------------------------ | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Click                                            | Plays a C4                                                        | nothing changes                                                                    |
+| press down and move pointer to the right or left | plays a C4 with increasing reverb, the more you move to the right | blue shape2 increases/ decreaeses in size matching the change of the reverb effect |
+| move pointer to left, down corner                | plays melody1                                                     | green shape3 covers the amount of corner that allows to play the melody            |
+| move pointer in pink circle                      | Plays an E                                                        | pink shape                                                                         |
+| pointer leaves pink circle                       | plays G                                                           | leaving pink shape                                                                 |
+| pointer moves clockwise 1 full round             | Notes increase by 1 octave                                        | moving around pink shape                                                           |
+| move pointer counterclockwise 1 full round       | Notes decrease by 1 octave                                        | moving around pink shape                                                           |
+|                                                  |                                                                   |                                                                                    |
+|                                                  |                                                                   |                                                                                    |
+|                                                  |                                                                   |                                                                                    |
 
 <!-- Anything else a player needs to know: how to get started, a good thing to try first. -->
+
+when pointer is released all Notes stop playing and shapes and effect is not changing
+Reverb effect and increase of shape2 only works for melody1 and press down note. If note is pressed down, other notes can be played at the same time and get the reverb effect.
+when melody is played, freeverb effect gets activated and changes to all pointer movements, even if you don't hear a sound, so entering and leaving pink shape also use the freeverb effect and shape2 is changing size
+if freeverb should stop, click once so releaseallfunction sets isPlaying to false and freeverb stops
+octaves range from 1-10 if you go lower or higher, it is unpleseant or not hearable anymore
 
 ---
 
